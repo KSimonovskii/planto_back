@@ -54,9 +54,19 @@ public class OrderServiceImpl implements OrderService, DataServices, DataForFilt
     @Override
     public OrderResponseDto updateOrder(String orderId, OrderUpdateDto orderUpdateDto) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setItems(orderUpdateDto.getItems().stream()
-                .map(i -> modelMapper.map(i, OrderItem.class)).toList());
-        orderRepository.save(order);
+        boolean orderChanged = false;
+        if (orderUpdateDto.getItems() != null) {
+            order.setItems(orderUpdateDto.getItems().stream()
+                    .map(i -> modelMapper.map(i, OrderItem.class)).toList());
+            orderChanged = true;
+        }
+        if (orderUpdateDto.getStatus() != null) {
+            order.setStatus(orderUpdateDto.getStatus());
+            orderChanged = true;
+        }
+        if (orderChanged) {
+            orderRepository.save(order);
+        }
         return modelMapper.map(order, OrderResponseDto.class);
     }
 

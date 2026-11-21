@@ -1,5 +1,6 @@
 package planto_project.dto;
 
+import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,11 +11,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@Builder
 public class OrderUpdateDto {
     private List<OrderItemDto> items;
+    private OrderStatus status;
 
-    public OrderUpdateDto(List<OrderItemDto> items) {
+    public OrderUpdateDto(String status, List<OrderItemDto> items) {
         this.items = items;
+        this.status = OrderStatus.valueOf(status);
     }
 }
